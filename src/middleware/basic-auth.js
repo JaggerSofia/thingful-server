@@ -29,12 +29,14 @@ function requireAuth(req, res, next) {
                     error: 'Unauthorized request'
                 })
             }
+
+        req.user = user;
         next()
         })
     .catch(next)
     }
 
   
-  module.exports = {
-    requireAuth,
+module.exports = {
+    requireAuth
   }
