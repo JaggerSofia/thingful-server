@@ -1,7 +1,6 @@
 const AuthService = require('../auth/auth-service')
 
 function requireAuth(req, res, next) {
-    const bcrypt = require('bcryptjs')
     const authToken = req.get('Authorization') || ''
     let basicToken 
 
@@ -31,7 +30,7 @@ function requireAuth(req, res, next) {
                 })
             }
 
-        return bcrypt.compare(tokenPassword, user.password)
+        return AuthService.comparePasswords(tokenPassword, user.password)
             .then(passwordMatch => {
                 if(!passwordMatch){
                     return res.status(401).json( {error: 'unauthorized request'} )
