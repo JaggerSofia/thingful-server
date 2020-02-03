@@ -5,8 +5,10 @@ const jwt = require('jsonwebtoken')
 
 describe('Auth Endpoints', function() {
   let db
+
   const { testUsers } = helpers.makeThingsFixtures()
   const testUser = testUsers[0]
+
   before('make knex instance', () => {
     db = knex({
       client: 'pg',
@@ -14,9 +16,14 @@ describe('Auth Endpoints', function() {
     })
     app.set('db', db)
   })
+
+  
   after('disconnect from db', () => db.destroy())
+
   before('cleanup', () => helpers.cleanTables(db))
+  
   afterEach('cleanup', () => helpers.cleanTables(db))
+  
   describe(`POST /api/auth/login`, () => {
     beforeEach('insert users', () =>
       helpers.seedUsers(
@@ -31,7 +38,8 @@ describe('Auth Endpoints', function() {
           user_name: testUser.user_name,
           password: testUser.password,
         }
-        it(`responds with 400 required error when '${field}' is missing`, () => {
+
+        it(`responds 400 required error when '${field}' is missing`, () => {
           delete loginAttemptBody[field]
           return supertest(app)
             .post('/api/auth/login')
@@ -40,7 +48,8 @@ describe('Auth Endpoints', function() {
               error: `Missing '${field}' in request body`,
             })
         })
-        it(`responds with 400 'invalid user_name or password' when bad user_name`, () => {
+
+        it(`responds 400 'invalid user_name or password' when bad user_name`, () => {
             const userInvalidUser = { user_name:'user-not', password:'existy'}
             return supertest(app)
                 .post('/api/auth/login')
@@ -49,7 +58,7 @@ describe('Auth Endpoints', function() {
                     error: `Incorrect user_name or password`
                 })
         })
-        it(`responds with 400 'invalid user_name or password' when bad user_name`, () => {
+        it(`responds 400 'invalid user_name or password' when bad user_name`, () => {
             const userInvalidPass = { user_name: testUser.user_name, password:'incorrect'}
             return supertest(app)
                 .post('/api/auth/login')
@@ -58,7 +67,8 @@ describe('Auth Endpoints', function() {
                     error: `Incorrect user_name or password`
                 })
         })
-        it(`responds 200 JWT auth token using secret when valid credentials`, () => {
+        
+        it(`responds 200 and JWT auth token using secret when valid credentials`, () => {
             const userValidCreds = {
                 user_name: testUser.user_name,
                 password: testUser.password,
