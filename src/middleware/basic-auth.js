@@ -1,7 +1,7 @@
 const AuthService = require('../auth/auth-service')
 
 function requireAuth(req, res, next) {
-    const authToken = req.get('authentication') || ''
+    const authToken = req.get('Authentication') || ''
     console.log(authToken)
     let basicToken 
 
@@ -14,7 +14,7 @@ function requireAuth(req, res, next) {
     }
     const [ tokenUserName, tokenPassword ] = AuthService.parseBasicToken(basicToken)
     
-    console.log(tokenUserName, tokenUserName)
+    console.log(tokenUserName, tokenPassword)
 
     if(!tokenUserName || !tokenPassword) {
         return res.status(401).json({
